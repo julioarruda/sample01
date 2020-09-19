@@ -1,0 +1,30 @@
+name: Docker Image CI
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ghcr.io
+        username: 'julioarruda'
+        password: ${{ secrets.GH_PACKAGES_TOKEN }}
+        
+    - name: Build the Docker image
+      run: |
+       docker build . --file Dockerfile --tag ghcr.io/sample01:$(date +%s)
+       docker tag ghcr.io/sample01:$(date +%s) ghcr.io/sample01:latest
+     
+     
+    - name: Docker Push
+      run: |
+       docker push ghcr.io/sample01:$(date +%s)
+       docker push ghcr.io/sample01:latest
