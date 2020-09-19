@@ -28,3 +28,9 @@ jobs:
       run: |
        docker push ghcr.io/julioarruda/sample01:${{ github.sha }}
        docker push ghcr.io/julioarruda/sample01:latest
+
+    - uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'demoteste01923'
+        publish-profile: ${{ secrets.azureWebAppPublishProfile }}
+        images: 'ghcr.io/julioarruda/sample01:${{ github.sha }}'
