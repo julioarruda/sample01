@@ -20,11 +20,11 @@ jobs:
         
     - name: Build the Docker image
       run: |
-       docker build . --file Dockerfile --tag ghcr.io/sample01:$(date +%s)
-       docker tag ghcr.io/sample01:$(date +%s) ghcr.io/sample01:latest
+       docker build . --file Dockerfile --tag ghcr.io/sample01:${{ github.sha }}
+       docker tag ghcr.io/sample01:${{ github.sha }} ghcr.io/sample01:latest
      
      
     - name: Docker Push
       run: |
-       docker push ghcr.io/sample01:$(date +%s)
+       docker push ghcr.io/sample01:${{ github.sha }}
        docker push ghcr.io/sample01:latest
