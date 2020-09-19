@@ -29,8 +29,27 @@ jobs:
        docker push ghcr.io/julioarruda/sample01:${{ github.sha }}
        docker push ghcr.io/julioarruda/sample01:latest
 
+    - name: Set deploystatus in_progress
+      uses: unacast/actions-github-deployment-status@0.4.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        status: in_progress
+
+    - name: Set an environment
+      run: |
+        echo '::set-env name=DEPLOY_ENVIRONMENT::Dev'
+
     - uses: azure/webapps-deploy@v2
       with:
         app-name: 'demoteste01923'
         publish-profile: ${{ secrets.azureWebAppPublishProfile }}
         images: 'ghcr.io/julioarruda/sample01:${{ github.sha }}'
+
+    - name: Update result to Deployment API
+      if: always()
+      uses: unacast/actions-github-deployment-status@0.4.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        status: ${{ job.status }}
+        description: "Deployed to some magic"
+        environment_url: '${{ env.DEPLOY_ENVIRONMENT }}'
